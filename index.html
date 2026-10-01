@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#081F4D">
+<title>Liga de Pádel 2026</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B2454'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D9F23C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#071A3D;
+  --bg-soft:#0B2454;
+  --court:#123A8F;
+  --surface:rgba(255,255,255,.055);
+  --surface-2:rgba(255,255,255,.09);
+  --line:rgba(214,228,255,.14);
+  --line-strong:rgba(214,228,255,.28);
+  --ink:#EDF3FF;
+  --muted:#9FB3DC;
+  --ball:#D9F23C;
+  --ball-ink:#172000;
+  --loss:#6C81B4;
+  --danger:#FF8A7A;
+  --radius:12px;
+  --font-display:"Big Shoulders Display","Arial Narrow",sans-serif;
+  --font-body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 520px at 88% -8%, rgba(27,85,196,.55) 0%, rgba(27,85,196,0) 62%),
+    linear-gradient(180deg,#0B2454 0%,#071A3D 100%);
+  background-attachment:fixed;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--ball);outline-offset:2px;border-radius:4px}
+
+.shell{max-width:980px;margin:0 auto;padding:0 18px}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero .shell{position:relative;padding-top:38px;padding-bottom:26px}
+.court-wm{
+  position:absolute;right:-30px;top:-16px;height:150%;width:auto;pointer-events:none;
+  stroke:rgba(233,240,255,.18);fill:none;stroke-width:1.6;
+}
+.court-wm .inner{stroke:rgba(233,240,255,.12)}
+.court-wm .net{stroke:rgba(233,240,255,.30);stroke-dasharray:4 4}
+.court-wm .ball{fill:var(--ball);stroke:none;animation:pulse 4s ease-in-out infinite;transform-origin:100px 70px}
+@keyframes pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.35)}}
+.hero-eyebrow{
+  font-size:.7rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:10px;
+}
+.hero-title{
+  font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(2.6rem,9vw,4.4rem);line-height:.92;letter-spacing:.01em;
+}
+.hero-title .year{color:var(--ball)}
+.hero-meta{margin-top:10px;font-size:.85rem;color:var(--muted);max-width:46ch}
+
+.strip{
+  position:relative;
+  margin-top:26px;display:flex;gap:26px;align-items:flex-end;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 20px;backdrop-filter:blur(6px);
+}
+.net{
+  position:absolute;top:12px;right:16px;
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:4px 10px;
+  background:rgba(0,0,0,.2);
+}
+.net::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.net.on{color:var(--ball)}
+.net.on::before{background:var(--ball)}
+.net.off{color:var(--danger)}
+.net.off::before{background:var(--danger)}
+.net.loading::before{animation:pulse 1.2s ease-in-out infinite}
+.strip-eyebrow{font-size:.64rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.strip-num{font-family:var(--font-display);font-weight:800;font-size:2.6rem;line-height:1;color:var(--ball)}
+.strip-num.done{font-size:1.5rem;color:var(--ink)}
+.strip-info{flex:1;max-width:420px}
+.strip-info p{font-size:.8rem;color:var(--muted);margin-bottom:8px}
+.strip-info p b{color:var(--ink)}
+.progress{height:5px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--ball);border-radius:99px;transition:width .6s ease}
+
+/* ---------- Nav ---------- */
+.tabs{
+  position:sticky;top:0;z-index:50;
+  background:rgba(7,26,61,.85);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.tabs .shell{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:0 18px}
+.tabs .shell::-webkit-scrollbar{display:none}
+.tabs a{
+  padding:15px 14px 12px;font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;
+}
+.tabs a:hover{color:var(--ink)}
+.tabs a.active{color:var(--ball);border-bottom-color:var(--ball)}
+
+/* ---------- Panels ---------- */
+main{padding:24px 0 90px}
+.panel{animation:fadeUp .35s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px;margin-bottom:20px;
+}
+.card-head{display:flex;align-items:baseline;gap:12px;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}
+.eyebrow{font-size:.64rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ball)}
+h2{font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:1.5rem;letter-spacing:.02em;line-height:1}
+.card-sub{font-size:.78rem;color:var(--muted)}
+
+/* ---------- Standings ---------- */
+.table-wrap{overflow-x:auto}
+table.standings{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.standings th{
+  font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  text-align:right;padding:8px 7px;border-bottom:1px solid var(--line-strong);white-space:nowrap;
+}
+.standings th.col-pair{text-align:left}
+.standings td{padding:13px 7px;border-bottom:1px solid var(--line);text-align:right;font-size:.86rem;font-weight:500;white-space:nowrap}
+.standings td.col-pair{text-align:left;font-weight:600;white-space:normal;min-width:150px}
+.standings tbody tr{animation:rise .45s ease both;animation-delay:calc(var(--i) * 45ms)}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.standings tbody tr:last-child td{border-bottom:none}
+.pos{font-family:var(--font-display);font-weight:800;font-size:1.25rem;color:var(--muted);display:inline-flex;align-items:center;gap:7px;width:38px}
+.pos-dot{width:8px;height:8px;border-radius:50%;background:var(--ball);display:inline-block;animation:pulse 4s ease-in-out infinite}
+tr.leader td{background:linear-gradient(90deg,rgba(217,242,60,.10),rgba(217,242,60,0) 65%)}
+tr.leader .pos{color:var(--ball)}
+.pts{font-family:var(--font-display);font-weight:800;font-size:1.35rem;color:var(--ink)}
+tr.leader .pts{color:var(--ball)}
+.dif.pos{color:var(--ball)}
+.dif.neg{color:var(--loss)}
+.legend{margin-top:12px;font-size:.72rem;color:var(--muted)}
+@media (max-width:720px){
+  .standings .hide-m{display:none}
+  .standings td{padding:12px 5px;font-size:.8rem}
+  .standings td.col-pair{font-size:.85rem;min-width:120px}
+}
+
+/* ---------- Matches ---------- */
+.match{border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,255,255,.03);margin-bottom:10px;overflow:hidden}
+.match.editing{border-color:var(--line-strong)}
+.match-top{display:flex;align-items:center;gap:14px;padding:13px 16px;flex-wrap:wrap}
+.teams{flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:200px;font-size:.92rem;font-weight:600}
+.vs{font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.btn{
+  font-size:.8rem;font-weight:600;color:var(--ink);background:transparent;
+  border:1px solid var(--line-strong);border-radius:9px;padding:8px 14px;transition:background .15s ease,border-color .15s ease,color .15s ease;
+}
+.btn:hover{background:rgba(255,255,255,.07)}
+.btn-ball{background:var(--ball);color:var(--ball-ink);border-color:transparent;font-weight:700}
+.btn-ball:hover{background:#e6fa63}
+.btn-mini{padding:5px 10px;font-size:.7rem;border-radius:7px}
+.btn-danger{color:var(--danger);border-color:rgba(255,138,122,.35)}
+.btn-danger.armed{background:var(--danger);color:#2A0A05;border-color:transparent}
+.teams-stack{flex:1;display:flex;flex-direction:column;gap:6px;min-width:200px;font-size:.92rem;font-weight:500}
+.teams-stack .team{color:var(--muted)}
+.teams-stack .team.winner{color:var(--ink);font-weight:700}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ball);margin-right:7px;vertical-align:1px}
+.score-col{text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.sets-final{font-family:var(--font-display);font-weight:800;font-size:1.5rem;line-height:1}
+.chips{display:flex;gap:5px}
+.set-chip{font-size:.68rem;font-weight:600;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--muted)}
+.row-actions{display:flex;gap:6px;flex-direction:column}
+@media (max-width:600px){
+  .row-actions{flex-direction:row}
+  .score-col{align-items:flex-start;text-align:left}
+  .match-top{gap:10px}
+}
+
+/* editor */
+.editor{display:none;border-top:1px dashed var(--line-strong);background:rgba(0,0,0,.22);padding:14px 16px}
+.match.editing .editor{display:block}
+.set-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.set-label{width:64px;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.set-inputs{display:flex;align-items:center;gap:7px}
+.set-inputs input{
+  width:52px;padding:9px;text-align:center;font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums;
+  background:rgba(255,255,255,.07);border:1px solid var(--line-strong);border-radius:8px;color:var(--ink);
+}
+.set-inputs input:focus{border-color:var(--ball);outline:none}
+.set-dash{color:var(--muted);font-weight:700}
+.set-opt{font-size:.66rem;color:var(--muted);font-weight:500;letter-spacing:0;text-transform:none}
+.editor-hint{font-size:.72rem;color:var(--muted);margin:4px 0 12px}
+.editor-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.editor-error{font-size:.75rem;color:var(--danger);font-weight:600;display:none;width:100%}
+.editor-error.show{display:block}
+
+/* weeks */
+.week{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);margin-bottom:12px;overflow:hidden}
+.week-head{
+  width:100%;display:flex;align-items:center;gap:12px;background:transparent;border:none;color:var(--ink);
+  padding:15px 18px;text-align:left;
+}
+.week-head:hover{background:rgba(255,255,255,.04)}
+.week-num{font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--ball);min-width:44px}
+.week-title{font-weight:700;font-size:.95rem}
+.week-sub{font-size:.72rem;color:var(--muted);flex:1}
+.week-count{font-size:.75rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}
+.week.open .week-count{color:var(--ball)}
+.week-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+.week.open .week-body{grid-template-rows:1fr}
+.week-inner{overflow:hidden;padding:0 14px}
+.week.open .week-inner{padding:2px 14px 14px}
+.chev{color:var(--muted);transition:transform .3s ease;font-size:.9rem}
+.week.open .chev{transform:rotate(180deg)}
+@media (max-width:600px){.week-sub{display:none}}
+
+/* ---------- Next matches ---------- */
+.next-empty{padding:8px 2px;font-size:.9rem;color:var(--muted)}
+.podium{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.podium span{font-size:.85rem;font-weight:600;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:9px;padding:8px 12px}
+.podium b{color:var(--ball);font-family:var(--font-display);font-size:1rem;margin-right:6px}
+
+/* ---------- Pairs ---------- */
+.pairs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.pair-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.pair-head{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.rank{font-family:var(--font-display);font-weight:800;font-size:1.6rem;color:var(--muted)}
+.pair-card.top .rank{color:var(--ball)}
+.pair-name{font-family:var(--font-display);font-weight:800;font-size:1.25rem;text-transform:uppercase;letter-spacing:.02em;flex:1;line-height:1}
+.pair-pts{font-family:var(--font-display);font-weight:800;font-size:1.25rem;color:var(--ball)}
+.pair-stats{font-size:.78rem;color:var(--muted);margin:8px 0 12px;font-variant-numeric:tabular-nums}
+.pair-stats b{color:var(--ink);font-weight:700}
+.form{display:flex;gap:5px;margin-bottom:14px}
+.form span{
+  width:22px;height:22px;display:grid;place-items:center;border-radius:6px;
+  font-size:.62rem;font-weight:800;background:rgba(255,255,255,.08);color:var(--muted);
+}
+.form span.win{background:var(--ball);color:var(--ball-ink)}
+.form span.loss{color:var(--loss)}
+.pair-matches{border-top:1px solid var(--line);margin-top:4px;padding-top:10px;display:none}
+.pair-card.open .pair-matches{display:block}
+.pm{display:flex;align-items:center;gap:10px;font-size:.78rem;padding:6px 0;border-bottom:1px solid rgba(214,228,255,.07)}
+.pm:last-child{border-bottom:none}
+.pm-week{font-family:var(--font-display);font-weight:700;color:var(--muted);min-width:26px}
+.pm-rival{flex:1;color:var(--muted)}
+.pm-score{font-weight:700;font-variant-numeric:tabular-nums}
+.pm-score.win{color:var(--ball)}
+.pm-score.loss{color:var(--loss)}
+.pm-score.pending{color:var(--muted);font-weight:500}
+.pm-badge{font-size:.66rem;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--muted)}
+.pm-badge.win{background:var(--ball);color:var(--ball-ink)}
+.pm-badge.loss{color:var(--loss)}
+
+/* ---------- Settings ---------- */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select{
+  font-family:inherit;font-size:.9rem;color:var(--ink);background:rgba(255,255,255,.06);
+  border:1px solid var(--line-strong);border-radius:9px;padding:10px 12px;width:100%;
+}
+.field input:focus,.field select:focus{border-color:var(--ball);outline:none}
+.field select option{background:#0B2454;color:var(--ink)}
+.settings-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.danger-zone{border-color:rgba(255,138,122,.28)}
+.danger-zone .eyebrow{color:var(--danger)}
+
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);z-index:99;
+  background:#0C2A66;border:1px solid var(--line-strong);color:var(--ink);
+  font-size:.82rem;font-weight:600;padding:11px 18px;border-radius:99px;
+  opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:600px){
+  .hero .shell{padding-top:28px}
+  .strip{flex-direction:column;align-items:flex-start;gap:14px}
+  .strip-info{max-width:none;width:100%}
+  .card{padding:16px}
+  .court-wm{right:-60px;opacity:.65}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="court-wm" viewBox="0 0 200 140" aria-hidden="true">
+    <rect x="18" y="14" width="164" height="112" rx="2"/>
+    <rect class="inner" x="26" y="22" width="148" height="96" rx="1"/>
+    <line class="net" x1="100" y1="14" x2="100" y2="126"/>
+    <line x1="72" y1="22" x2="72" y2="118"/>
+    <line x1="128" y1="22" x2="128" y2="118"/>
+    <line x1="26" y1="70" x2="72" y2="70"/>
+    <line x1="128" y1="70" x2="174" y2="70"/>
+    <circle class="ball" cx="100" cy="70" r="4.5"/>
+  </svg>
+  <div class="shell">
+    <p class="hero-eyebrow">Calendario final · 8 parejas · 7 jornadas · 56 partidos</p>
+    <h1 class="hero-title">Liga de Pádel <span class="year">2026</span></h1>
+    <p class="hero-meta">Primero la ida completa contra las otras 7 parejas. Después, las revanchas. La jornada 4 cierra la ida y abre la vuelta.</p>
+    <div class="strip">
+      <span class="net" id="net-status"></span>
+      <div>
+        <p class="strip-eyebrow" id="strip-eyebrow">Jornada actual</p>
+        <p class="strip-num" id="strip-num">01</p>
+      </div>
+      <div class="strip-info">
+        <p id="strip-text"><b>0</b> de 56 partidos jugados</p>
+        <div class="progress"><i id="progress-bar" style="width:0%"></i></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="shell">
+    <a href="#clasificacion" data-tab="clasificacion">Clasificación</a>
+    <a href="#partidos" data-tab="partidos">Partidos</a>
+    <a href="#parejas" data-tab="parejas">Parejas</a>
+    <a href="#ajustes" data-tab="ajustes">Ajustes</a>
+  </div>
+</nav>
+
+<main class="shell">
+
+  <section class="panel" id="panel-clasificacion" data-panel="clasificacion">
+    <div class="card">
+      <div class="card-head">
+        <h2>Clasificación</h2>
+        <span class="card-sub" id="standings-sub"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="standings">
+          <thead>
+            <tr>
+              <th style="text-align:left">#</th>
+              <th class="col-pair" style="text-align:left">Pareja</th>
+              <th>PJ</th>
+              <th class="hide-m">PG</th>
+              <th class="hide-m">PP</th>
+              <th class="hide-m">SG</th>
+              <th class="hide-m">SP</th>
+              <th class="hide-m">JG</th>
+              <th class="hide-m">JP</th>
+              <th>DIF</th>
+              <th>PTS</th>
+            </tr>
+          </thead>
+          <tbody id="standings-body"></tbody>
+        </table>
+      </div>
+      <p class="legend" id="standings-legend"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Próximos partidos</h2>
+        <span class="card-sub" id="next-sub"></span>
+      </div>
+      <div id="next-matches"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-partidos" data-panel="partidos" hidden>
+    <div class="card-head" style="margin-bottom:16px">
+      <h2>Calendario</h2>
+      <span class="card-sub">Ida y vuelta · toca una jornada para ver los partidos</span>
+    </div>
+    <div id="weeks"></div>
+  </section>
+
+  <section class="panel" id="panel-parejas" data-panel="parejas" hidden>
+    <div class="card-head" style="margin-bottom:16px">
+      <h2>Parejas</h2>
+      <span class="card-sub">Toca una pareja para ver sus 14 partidos</span>
+    </div>
+    <div class="pairs-grid" id="pairs-grid"></div>
+  </section>
+
+  <section class="panel" id="panel-ajustes" data-panel="ajustes" hidden>
+    <div class="card">
+      <div class="card-head"><h2>Puntuación</h2><span class="card-sub">Se aplica a toda la liga</span></div>
+      <div class="settings-grid">
+        <div class="field">
+          <label for="set-win">Puntos por victoria</label>
+          <select id="set-win">
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="set-lose">Puntos por derrota</label>
+          <select id="set-lose">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <p class="legend">Desempates: diferencia de juegos, juegos ganados y diferencia de sets.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Fechas de jornada</h2><span class="card-sub">Opcional · aparece en el calendario</span></div>
+      <div class="settings-grid" id="dates-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Parejas</h2><span class="card-sub">Renombra si hay cambios</span></div>
+      <div class="settings-grid" id="names-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Datos</h2><span class="card-sub">La liga se guarda en este navegador</span></div>
+      <div class="settings-actions">
+        <button class="btn" id="btn-export">Exportar copia</button>
+        <button class="btn" id="btn-import">Importar copia</button>
+        <input type="file" id="import-file" accept="application/json" hidden>
+      </div>
+    </div>
+
+    <div class="card danger-zone">
+      <div class="card-head"><h2>Reiniciar</h2><span class="card-sub">Borra todos los resultados</span></div>
+      <div class="settings-actions">
+        <button class="btn btn-danger" id="btn-reset">Borrar todos los resultados</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const PAIRS = [
+  { id:'molina',   name:'Molina y Marcos Payá' },
+  { id:'juanru',   name:'Juanru y Caste' },
+  { id:'seva',     name:'Seva y Alberto' },
+  { id:'kike',     name:'Kike y Gonzalo' },
+  { id:'jaime',    name:'Jaime y Jose' },
+  { id:'zuka',     name:'Zuka y Maeso' },
+  { id:'cayetano', name:'Cayetano y Cos' },
+  { id:'hugolfo',  name:'Hugolfo y Pablo Baeza' }
+];
+
+const FIXTURES = [
+  [ ['molina','juanru'], ['molina','seva'], ['kike','jaime'], ['zuka','jaime'],
+    ['kike','cayetano'], ['cayetano','seva'], ['zuka','hugolfo'], ['juanru','hugolfo'] ],
+  [ ['kike','seva'], ['jaime','molina'], ['kike','hugolfo'], ['seva','juanru'],
+    ['cayetano','juanru'], ['jaime','hugolfo'], ['zuka','molina'], ['cayetano','zuka'] ],
+  [ ['seva','jaime'], ['juanru','zuka'], ['kike','juanru'], ['seva','zuka'],
+    ['hugolfo','molina'], ['jaime','cayetano'], ['hugolfo','cayetano'], ['kike','molina'] ],
+  [ ['kike','zuka'], ['hugolfo','seva'], ['juanru','jaime'], ['molina','cayetano'],
+    ['seva','molina'], ['cayetano','kike'], ['jaime','zuka'], ['hugolfo','juanru'] ],
+  [ ['molina','zuka'], ['hugolfo','zuka'], ['seva','cayetano'], ['juanru','cayetano'],
+    ['jaime','kike'], ['seva','kike'], ['juanru','molina'], ['hugolfo','jaime'] ],
+  [ ['molina','jaime'], ['cayetano','jaime'], ['zuka','seva'], ['juanru','kike'],
+    ['zuka','cayetano'], ['molina','hugolfo'], ['hugolfo','kike'], ['juanru','seva'] ],
+  [ ['jaime','seva'], ['zuka','juanru'], ['molina','kike'], ['seva','hugolfo'],
+    ['zuka','kike'], ['jaime','juanru'], ['cayetano','molina'], ['cayetano','hugolfo'] ]
+];
+
+const WEEK_SUBS = [
+  'Ida · rondas 1 y 2',
+  'Ida · rondas 3 y 4',
+  'Ida · rondas 5 y 6',
+  'Ida ronda 7 · Vuelta ronda 1',
+  'Vuelta · rondas 2 y 3',
+  'Vuelta · rondas 4 y 5',
+  'Vuelta · rondas 6 y 7'
+];
+
+const KEY = 'ligapadel-2026';
+const TOTAL = 56;
+
+const SUPABASE_URL = 'https://dmyfzsyalyxtodyfdlai.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_gpbxx_uOSnIkN6g6k0Y3Jg_td8JDqUD';
+const REMOTE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+let sb = null;
+let settingsTimer;
+
+function defaultSettings(){
+  return { win:3, lose:1, dates:{}, names:{} };
+}
+
+function defaultState(){
+  return { version:1, results:{}, settings: defaultSettings() };
+}
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return defaultState();
+    const data = JSON.parse(raw);
+    return {
+      version:1,
+      results: data.results || {},
+      settings: Object.assign({ win:3, lose:1, dates:{}, names:{} }, data.settings || {})
+    };
+  } catch (e) { return defaultState(); }
+}
+
+let state = loadState();
+
+function persist(){
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+/* ---------- sync (Supabase) ---------- */
+function setNet(status){
+  const el = document.getElementById('net-status');
+  if (!el) return;
+  const map = {
+    loading: ['Cargando', ''],
+    online: ['En línea', 'on'],
+    offline: ['Sin conexión', 'off'],
+    local: ['Modo local', 'local']
+  };
+  const s = map[status] || map.loading;
+  el.textContent = s[0];
+  el.className = 'net ' + s[1];
+}
+
+function applyRow(row){
+  if (!row || !row.id) return;
+  if (row.id === 'settings'){
+    state.settings = Object.assign(defaultSettings(), row.data || {});
+  } else if (/^w[1-7]-[0-7]$/.test(row.id) && row.data){
+    state.results[row.id] = row.data;
+  }
+}
+
+async function loadRemote(){
+  const { data, error } = await sb.from('league').select('id,data');
+  if (error) return false;
+  data.forEach(applyRow);
+  persist();
+  return true;
+}
+
+async function syncSet(id, data){
+  if (!sb) return;
+  const { error } = await sb.from('league').upsert({ id, data, updated_at: new Date().toISOString() });
+  if (error){
+    setNet('offline');
+    toast('Sin conexión: guardado solo en este dispositivo');
+  }
+}
+
+async function syncDelete(id){
+  if (!sb) return;
+  const { error } = await sb.from('league').delete().eq('id', id);
+  if (error){
+    setNet('offline');
+    toast('Sin conexión: el borrado no se sincronizó');
+  }
+}
+
+function syncSettingsSoon(){
+  if (!sb) return;
+  clearTimeout(settingsTimer);
+  settingsTimer = setTimeout(() => syncSet('settings', state.settings), 600);
+}
+
+async function syncImportAll(){
+  if (!sb) return;
+  const now = new Date().toISOString();
+  const rows = Object.entries(state.results).map(([id, data]) => ({ id, data, updated_at: now }));
+  rows.push({ id:'settings', data: state.settings, updated_at: now });
+  const { error } = await sb.from('league').upsert(rows);
+  if (error){
+    setNet('offline');
+    toast('Importado en local: no se pudo sincronizar');
+  }
+}
+
+async function syncResetRemote(){
+  if (!sb) return;
+  const { error } = await sb.from('league').delete().neq('id', '');
+  if (error){ setNet('offline'); return; }
+  syncSet('settings', state.settings);
+}
+
+function initRemote(){
+  if (!REMOTE || typeof supabase === 'undefined'){
+    setNet(REMOTE ? 'offline' : 'local');
+    return;
+  }
+  setNet('loading');
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  loadRemote().then(ok => {
+    if (ok){ setNet('online'); renderAll(); }
+    else setNet('offline');
+  });
+  sb.channel('league-sync')
+    .on('postgres_changes', { event:'*', schema:'public', table:'league' }, payload => {
+      if (payload.eventType === 'DELETE'){
+        const id = payload.old && payload.old.id;
+        if (!id) return;
+        if (id === 'settings') state.settings = defaultSettings();
+        else delete state.results[id];
+      } else {
+        applyRow(payload.new);
+      }
+      persist();
+      renderAll();
+    })
+    .subscribe(status => {
+      if (status === 'SUBSCRIBED') setNet('online');
+      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setNet('offline');
+    });
+}
+
+function pairName(id){ return state.settings.names[id] || PAIRS.find(p => p.id === id).name; }
+function key(w, i){ return 'w' + w + '-' + i; }
+
+function tally(sets){
+  let a = 0, b = 0, ga = 0, gb = 0;
+  sets.forEach(s => { if (s[0] > s[1]) a++; else b++; ga += s[0]; gb += s[1]; });
+  return { setsA:a, setsB:b, gamesA:ga, gamesB:gb, aWon:a > b };
+}
+
+function computeStandings(){
+  const st = {};
+  PAIRS.forEach(p => { st[p.id] = { id:p.id, pj:0, pg:0, pp:0, sg:0, sp:0, jg:0, jp:0, dif:0, pts:0, form:[] }; });
+  for (let w = 1; w <= 7; w++){
+    for (let i = 0; i < 8; i++){
+      const r = state.results[key(w, i)];
+      if (!r) continue;
+      const m = FIXTURES[w-1][i];
+      const t = tally(r.sets);
+      const add = (id, mySets, oppSets, myGames, oppGames, won) => {
+        const s = st[id];
+        s.pj++;
+        if (won) s.pg++; else s.pp++;
+        s.sg += mySets; s.sp += oppSets;
+        s.jg += myGames; s.jp += oppGames;
+        s.pts += won ? state.settings.win : state.settings.lose;
+        s.form.push(won ? 'V' : 'D');
+      };
+      add(m[0], t.setsA, t.setsB, t.gamesA, t.gamesB, t.aWon);
+      add(m[1], t.setsB, t.setsA, t.gamesB, t.gamesA, !t.aWon);
+    }
+  }
+  const list = PAIRS.map(p => {
+    const s = st[p.id];
+    s.dif = s.jg - s.jp;
+    s.setDif = s.sg - s.sp;
+    return s;
+  });
+  list.sort((x, y) =>
+    y.pts - x.pts || y.dif - x.dif || y.jg - x.jg || y.setDif - x.setDif ||
+    pairName(x.id).localeCompare(pairName(y.id), 'es')
+  );
+  return list;
+}
+
+function weekStats(w){
+  let played = 0;
+  for (let i = 0; i < 8; i++) if (state.results[key(w, i)]) played++;
+  return played;
+}
+
+function currentWeek(){
+  for (let w = 1; w <= 7; w++) if (weekStats(w) < 8) return w;
+  return null;
+}
+
+/* ---------- render: hero ---------- */
+function renderHero(){
+  const played = Object.keys(state.results).length;
+  const cw = currentWeek();
+  const num = document.getElementById('strip-num');
+  const eyebrow = document.getElementById('strip-eyebrow');
+  if (cw){
+    eyebrow.textContent = 'Jornada actual';
+    num.textContent = String(cw).padStart(2, '0');
+    num.classList.remove('done');
+  } else {
+    eyebrow.textContent = 'Estado';
+    num.textContent = 'Liga completada';
+    num.classList.add('done');
+  }
+  document.getElementById('strip-text').innerHTML = '<b>' + played + '</b> de ' + TOTAL + ' partidos jugados';
+  document.getElementById('progress-bar').style.width = Math.round(played / TOTAL * 100) + '%';
+}
+
+/* ---------- render: standings ---------- */
+function renderStandings(st){
+  const body = document.getElementById('standings-body');
+  body.innerHTML = st.map((s, idx) => {
+    const leader = idx === 0;
+    return '<tr class="' + (leader ? 'leader' : '') + '" style="--i:' + idx + '">' +
+      '<td style="text-align:left"><span class="pos">' + (leader ? '<span class="pos-dot"></span>' : '') + (idx + 1) + '</span></td>' +
+      '<td class="col-pair">' + esc(pairName(s.id)) + '</td>' +
+      '<td>' + s.pj + '</td>' +
+      '<td class="hide-m">' + s.pg + '</td>' +
+      '<td class="hide-m">' + s.pp + '</td>' +
+      '<td class="hide-m">' + s.sg + '</td>' +
+      '<td class="hide-m">' + s.sp + '</td>' +
+      '<td class="hide-m">' + s.jg + '</td>' +
+      '<td class="hide-m">' + s.jp + '</td>' +
+      '<td class="dif ' + (s.dif > 0 ? 'pos' : s.dif < 0 ? 'neg' : '') + '">' + (s.dif > 0 ? '+' : '') + s.dif + '</td>' +
+      '<td class="pts">' + s.pts + '</td>' +
+    '</tr>';
+  }).join('');
+  document.getElementById('standings-legend').textContent =
+    'Victoria ' + state.settings.win + ' pts · Derrota ' + state.settings.lose + ' pts · Desempate por diferencia de juegos';
+  document.getElementById('standings-sub').textContent = pairName(st[0].id) + ' lidera con ' + st[0].pts + ' pts';
+}
+
+/* ---------- render: match row ---------- */
+function editorHtml(r){
+  const sets = r ? r.sets : [];
+  const val = (si, pi) => (sets[si] && sets[si][pi] != null) ? sets[si][pi] : '';
+  const row = (si, label, opt) =>
+    '<div class="set-row" data-set="' + si + '">' +
+      '<span class="set-label">' + label + (opt ? ' <span class="set-opt">(si hace falta)</span>' : '') + '</span>' +
+      '<div class="set-inputs">' +
+        '<input type="number" min="0" max="9" inputmode="numeric" aria-label="' + label + ' juegos pareja 1" value="' + val(si, 0) + '">' +
+        '<span class="set-dash">–</span>' +
+        '<input type="number" min="0" max="9" inputmode="numeric" aria-label="' + label + ' juegos pareja 2" value="' + val(si, 1) + '">' +
+      '</div>' +
+    '</div>';
+  return '<div class="editor">' +
+    row(0, 'Set 1', false) + row(1, 'Set 2', false) + row(2, 'Set 3', true) +
+    '<p class="editor-hint">Escribe los juegos de cada set. El tercero solo cuenta si hay empate a 1.</p>' +
+    '<div class="editor-actions">' +
+      '<button class="btn btn-ball" data-action="save-result">Guardar resultado</button>' +
+      '<button class="btn" data-action="cancel-edit">Cancelar</button>' +
+      '<p class="editor-error"></p>' +
+    '</div>' +
+  '</div>';
+}
+
+function matchRow(w, i){
+  const m = FIXTURES[w-1][i];
+  const k = key(w, i);
+  const r = state.results[k];
+  const A = esc(pairName(m[0])), B = esc(pairName(m[1]));
+  let top;
+  if (r){
+    const t = tally(r.sets);
+    const chips = r.sets.map(s => '<span class="set-chip">' + s[0] + '-' + s[1] + '</span>').join('');
+    top = '<div class="match-top">' +
+      '<div class="teams-stack">' +
+        '<span class="team ' + (t.aWon ? 'winner' : '') + '">' + (t.aWon ? '<i class="dot"></i>' : '') + A + '</span>' +
+        '<span class="team ' + (!t.aWon ? 'winner' : '') + '">' + (!t.aWon ? '<i class="dot"></i>' : '') + B + '</span>' +
+      '</div>' +
+      '<div class="score-col">' +
+        '<span class="sets-final">' + t.setsA + '-' + t.setsB + '</span>' +
+        '<div class="chips">' + chips + '</div>' +
+      '</div>' +
+      '<div class="row-actions">' +
+        '<button class="btn btn-mini" data-action="edit-result">Editar</button>' +
+        '<button class="btn btn-mini btn-danger" data-action="delete-result">Borrar</button>' +
+      '</div>' +
+    '</div>';
+  } else {
+    top = '<div class="match-top">' +
+      '<div class="teams"><span class="team">' + A + '</span><span class="vs">vs</span><span class="team">' + B + '</span></div>' +
+      '<button class="btn btn-ball" data-action="add-result">Añadir resultado</button>' +
+    '</div>';
+  }
+  return '<article class="match" data-key="' + k + '">' + top + editorHtml(r) + '</article>';
+}
+
+/* ---------- render: next ---------- */
+function renderNext(){
+  const cw = currentWeek();
+  const box = document.getElementById('next-matches');
+  const sub = document.getElementById('next-sub');
+  if (cw === null){
+    sub.textContent = 'Todo jugado';
+    const st = computeStandings();
+    box.innerHTML = '<p class="next-empty">Liga completada. Así queda el podio:</p>' +
+      '<div class="podium">' + st.slice(0, 3).map((s, i) =>
+        '<span><b>' + (i + 1) + 'º</b>' + esc(pairName(s.id)) + ' · ' + s.pts + ' pts</span>'
+      ).join('') + '</div>';
+    return;
+  }
+  sub.textContent = 'Jornada ' + cw + (state.settings.dates[cw] ? ' · ' + state.settings.dates[cw] : '');
+  let html = '';
+  for (let i = 0; i < 8; i++) if (!state.results[key(cw, i)]) html += matchRow(cw, i);
+  box.innerHTML = html || '<p class="next-empty">No quedan partidos pendientes en esta jornada.</p>';
+}
+
+/* ---------- render: weeks ---------- */
+function renderMatches(){
+  const cw = currentWeek();
+  const box = document.getElementById('weeks');
+  let html = '';
+  for (let w = 1; w <= 7; w++){
+    const played = weekStats(w);
+    const open = w === cw;
+    const date = state.settings.dates[w];
+    let rows = '';
+    for (let i = 0; i < 8; i++) rows += matchRow(w, i);
+    html += '<section class="week ' + (open ? 'open' : '') + '">' +
+      '<button class="week-head" data-action="toggle-week" aria-expanded="' + open + '">' +
+        '<span class="week-num">J' + w + '</span>' +
+        '<span class="week-title">Jornada ' + w + '</span>' +
+        '<span class="week-sub">' + WEEK_SUBS[w-1] + (date ? ' · ' + esc(date) : '') + '</span>' +
+        '<span class="week-count">' + played + '/8</span>' +
+        '<span class="chev">▾</span>' +
+      '</button>' +
+      '<div class="week-body"><div class="week-inner">' + rows + '</div></div>' +
+    '</section>';
+  }
+  box.innerHTML = html;
+}
+
+/* ---------- render: pairs ---------- */
+function renderPairs(st){
+  const box = document.getElementById('pairs-grid');
+  box.innerHTML = st.map((s, idx) => {
+    const form = s.form.slice(-5).map((f, i) =>
+      '<span class="' + (f === 'V' ? 'win' : 'loss') + '">' + f + '</span>'
+    ).join('') || '<span>–</span>';
+    let matches = '';
+    for (let w = 1; w <= 7; w++){
+      FIXTURES[w-1].forEach((m, i) => {
+        if (m[0] !== s.id && m[1] !== s.id) return;
+        const rivalId = m[0] === s.id ? m[1] : m[0];
+        const r = state.results[key(w, i)];
+        let score = '<span class="pm-score pending">pendiente</span>';
+        let badge = '';
+        if (r){
+          const t = tally(r.sets);
+          const mine = m[0] === s.id ? t.setsA : t.setsB;
+          const theirs = m[0] === s.id ? t.setsB : t.setsA;
+          const won = mine > theirs;
+          score = '<span class="pm-score ' + (won ? 'win' : 'loss') + '">' + mine + '-' + theirs + '</span>';
+          badge = '<span class="pm-badge ' + (won ? 'win' : 'loss') + '">' + (won ? 'V' : 'D') + '</span>';
+        }
+        matches += '<div class="pm">' +
+          '<span class="pm-week">J' + w + '</span>' +
+          '<span class="pm-rival">vs ' + esc(pairName(rivalId)) + '</span>' +
+          score + badge +
+        '</div>';
+      });
+    }
+    return '<article class="pair-card ' + (idx === 0 ? 'top' : '') + '" data-pair="' + s.id + '">' +
+      '<div class="pair-head">' +
+        '<span class="rank">' + (idx + 1) + '</span>' +
+        '<span class="pair-name">' + esc(pairName(s.id)) + '</span>' +
+        '<span class="pair-pts">' + s.pts + '<small style="font-size:.65rem;color:var(--muted)"> pts</small></span>' +
+      '</div>' +
+      '<p class="pair-stats">PJ <b>' + s.pj + '</b> · PG <b>' + s.pg + '</b> · PP <b>' + s.pp + '</b> · DIF <b>' + (s.dif > 0 ? '+' : '') + s.dif + '</b></p>' +
+      '<div class="form">' + form + '</div>' +
+      '<button class="btn btn-mini" data-action="toggle-pair">Ver partidos</button>' +
+      '<div class="pair-matches">' + matches + '</div>' +
+    '</article>';
+  }).join('');
+}
+
+/* ---------- settings form ---------- */
+function renderSettingsForm(){
+  document.getElementById('set-win').value = state.settings.win;
+  document.getElementById('set-lose').value = state.settings.lose;
+
+  const dates = document.getElementById('dates-grid');
+  dates.innerHTML = '';
+  for (let w = 1; w <= 7; w++){
+    const f = document.createElement('div');
+    f.className = 'field';
+    const label = document.createElement('label');
+    label.textContent = 'Jornada ' + w;
+    label.setAttribute('for', 'date-' + w);
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'date-' + w;
+    input.placeholder = 'Vie 6 feb';
+    input.value = state.settings.dates[w] || '';
+    input.addEventListener('input', () => {
+      state.settings.dates[w] = input.value.trim();
+      persist();
+      syncSettingsSoon();
+      renderMatches();
+      renderNext();
+    });
+    f.appendChild(label); f.appendChild(input);
+    dates.appendChild(f);
+  }
+
+  const names = document.getElementById('names-grid');
+  names.innerHTML = '';
+  PAIRS.forEach(p => {
+    const f = document.createElement('div');
+    f.className = 'field';
+    const label = document.createElement('label');
+    label.textContent = 'Pareja ' + (PAIRS.indexOf(p) + 1);
+    label.setAttribute('for', 'name-' + p.id);
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'name-' + p.id;
+    input.value = pairName(p.id);
+    input.addEventListener('input', () => {
+      state.settings.names[p.id] = input.value;
+      persist();
+      syncSettingsSoon();
+      const st = computeStandings();
+      renderHero(); renderStandings(st); renderNext(); renderMatches(); renderPairs(st);
+    });
+    f.appendChild(label); f.appendChild(input);
+    names.appendChild(f);
+  });
+}
+
+/* ---------- actions ---------- */
+function openEditor(matchEl, focus){
+  document.querySelectorAll('.match.editing').forEach(el => {
+    if (el !== matchEl) el.classList.remove('editing');
+  });
+  matchEl.classList.add('editing');
+  if (focus){
+    const firstEmpty = [...matchEl.querySelectorAll('.editor input')].find(x => x.value === '');
+    const target = firstEmpty || matchEl.querySelector('.editor input');
+    if (target) target.focus();
+  }
+}
+
+function readSet(row){
+  const inputs = [...row.querySelectorAll('input')];
+  const a = inputs[0].value.trim(), b = inputs[1].value.trim();
+  if (a === '' && b === '') return null;
+  if (a === '' || b === '') return { err:'partial' };
+  const na = Number(a), nb = Number(b);
+  if (!Number.isInteger(na) || !Number.isInteger(nb) || na < 0 || nb < 0 || na > 9 || nb > 9) return { err:'range' };
+  if (na === nb) return { err:'tie' };
+  return { games:[na, nb] };
+}
+
+function saveResult(matchEl){
+  const rows = [...matchEl.querySelectorAll('.editor .set-row')];
+  const errEl = matchEl.querySelector('.editor-error');
+  const fail = msg => { errEl.textContent = msg; errEl.classList.add('show'); };
+  errEl.classList.remove('show');
+  const r0 = readSet(rows[0]), r1 = readSet(rows[1]), r2 = readSet(rows[2]);
+  if ((r0 && r0.err === 'partial') || (r1 && r1.err === 'partial') || (r2 && r2.err === 'partial')) return fail('A un set le falta un marcador.');
+  if ((r0 && r0.err === 'range') || (r1 && r1.err === 'range') || (r2 && r2.err === 'range')) return fail('Los juegos van de 0 a 9.');
+  if ((r0 && r0.err === 'tie') || (r1 && r1.err === 'tie') || (r2 && r2.err === 'tie')) return fail('Un set no puede acabar empatado.');
+  if (!r0 || !r1 || r0.err || r1.err) return fail('Completa los dos primeros sets.');
+  const firstWonByA = r0.games[0] > r0.games[1];
+  const secondWonByA = r1.games[0] > r1.games[1];
+  if (r2 && r2.err) return fail('Revisa el tercer set.');
+  if (r2 && firstWonByA === secondWonByA) return fail('Si alguien gana los dos primeros sets, no hay tercero.');
+  if (!r2 && firstWonByA !== secondWonByA) return fail('Vais 1-1: falta el tercer set.');
+  const sets = [r0.games, r1.games];
+  if (r2) sets.push(r2.games);
+  state.results[matchEl.dataset.key] = { sets };
+  persist();
+  renderAll();
+  syncSet(matchEl.dataset.key, { sets });
+  toast('Resultado guardado');
+}
+
+function armDelete(btn){
+  if (btn.classList.contains('armed')) return true;
+  btn.classList.add('armed');
+  btn.textContent = '¿Seguro?';
+  setTimeout(() => { btn.classList.remove('armed'); btn.textContent = 'Borrar'; }, 3000);
+  return false;
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  if (action === 'toggle-week'){
+    btn.parentElement.classList.toggle('open');
+    return;
+  }
+  const matchEl = btn.closest('.match');
+  if (matchEl){
+    if (action === 'add-result') return openEditor(matchEl, true);
+    if (action === 'edit-result') return openEditor(matchEl, false);
+    if (action === 'cancel-edit') return matchEl.classList.remove('editing');
+    if (action === 'save-result') return saveResult(matchEl);
+    if (action === 'delete-result'){
+      if (!armDelete(btn)) return;
+      delete state.results[matchEl.dataset.key];
+      persist();
+      renderAll();
+      syncDelete(matchEl.dataset.key);
+      toast('Resultado borrado');
+      return;
+    }
+  }
+  if (action === 'toggle-pair'){
+    const card = btn.closest('.pair-card');
+    card.classList.toggle('open');
+    btn.textContent = card.classList.contains('open') ? 'Ocultar partidos' : 'Ver partidos';
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const matchEl = e.target.closest && e.target.closest('.match');
+  if (matchEl && matchEl.classList.contains('editing')) saveResult(matchEl);
+});
+
+/* ---------- tabs ---------- */
+const TAB_IDS = ['clasificacion', 'partidos', 'parejas', 'ajustes'];
+function showTab(id){
+  if (!TAB_IDS.includes(id)) id = 'clasificacion';
+  TAB_IDS.forEach(t => {
+    document.querySelector('[data-panel="' + t + '"]').hidden = t !== id;
+    document.querySelector('[data-tab="' + t + '"]').classList.toggle('active', t === id);
+  });
+  if (id === 'ajustes') renderSettingsForm();
+}
+window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
+showTab(location.hash.slice(1) || 'clasificacion');
+
+/* ---------- data buttons ---------- */
+document.getElementById('set-win').addEventListener('change', e => {
+  state.settings.win = Number(e.target.value);
+  persist(); renderAll(); syncSet('settings', state.settings); toast('Puntuación actualizada');
+});
+document.getElementById('set-lose').addEventListener('change', e => {
+  state.settings.lose = Number(e.target.value);
+  persist(); renderAll(); syncSet('settings', state.settings); toast('Puntuación actualizada');
+});
+document.getElementById('btn-export').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'liga-padel-2026.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Copia exportada');
+});
+document.getElementById('btn-import').addEventListener('click', () => {
+  document.getElementById('import-file').click();
+});
+document.getElementById('import-file').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      state = {
+        version:1,
+        results: data.results || {},
+        settings: Object.assign({ win:3, lose:1, dates:{}, names:{} }, data.settings || {})
+      };
+      persist();
+      renderAll();
+      renderSettingsForm();
+      syncImportAll();
+      toast('Datos importados');
+    } catch (err) { toast('No se pudo leer el archivo'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+document.getElementById('btn-reset').addEventListener('click', e => {
+  if (!armDelete(e.target)) return;
+  state = defaultState();
+  persist();
+  renderAll();
+  renderSettingsForm();
+  syncResetRemote();
+  toast('Liga reiniciada');
+});
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+function renderAll(){
+  const st = computeStandings();
+  renderHero();
+  renderStandings(st);
+  renderNext();
+  renderMatches();
+  renderPairs(st);
+}
+
+renderAll();
+renderSettingsForm();
+initRemote();
+</script>
+</body>
+</html>
