@@ -309,9 +309,9 @@ tr.leader .pts{color:var(--ball)}
     <circle class="ball" cx="100" cy="70" r="4.5"/>
   </svg>
   <div class="shell">
-    <p class="hero-eyebrow">Calendario final · 8 parejas · 7 jornadas · 56 partidos</p>
+    <p class="hero-eyebrow">Calendario final · 9 parejas · 8 jornadas · 72 partidos</p>
     <h1 class="hero-title">Liga de Pádel <span class="year">2026</span></h1>
-    <p class="hero-meta">Primero la ida completa contra las otras 7 parejas. Después, las revanchas. La jornada 4 cierra la ida y abre la vuelta.</p>
+    <p class="hero-meta">Primero la ida completa contra las otras 8 parejas. Después, las revanchas. Las jornadas 1 a 4 son la ida y las jornadas 5 a 8 la vuelta.</p>
     <div class="strip">
       <span class="net" id="net-status"></span>
       <div>
@@ -319,7 +319,7 @@ tr.leader .pts{color:var(--ball)}
         <p class="strip-num" id="strip-num">01</p>
       </div>
       <div class="strip-info">
-        <p id="strip-text"><b>0</b> de 56 partidos jugados</p>
+        <p id="strip-text"><b>0</b> de 72 partidos jugados</p>
         <div class="progress"><i id="progress-bar" style="width:0%"></i></div>
       </div>
     </div>
@@ -386,7 +386,7 @@ tr.leader .pts{color:var(--ball)}
   <section class="panel" id="panel-parejas" data-panel="parejas" hidden>
     <div class="card-head" style="margin-bottom:16px">
       <h2>Parejas</h2>
-      <span class="card-sub">Toca una pareja para ver sus 14 partidos</span>
+      <span class="card-sub">Toca una pareja para ver sus 16 partidos</span>
     </div>
     <div class="pairs-grid" id="pairs-grid"></div>
   </section>
@@ -452,38 +452,52 @@ const PAIRS = [
   { id:'jaime',    name:'Jaime y Jose' },
   { id:'zuka',     name:'Zuka y Maeso' },
   { id:'cayetano', name:'Cayetano y Cos' },
-  { id:'hugolfo',  name:'Hugolfo y Pablo Baeza' }
+  { id:'hugolfo',  name:'Hugolfo y Pablo Baeza' },
+  { id:'raul',     name:'Raul y Luis' }
 ];
 
 const FIXTURES = [
   [ ['molina','juanru'], ['molina','seva'], ['kike','jaime'], ['zuka','jaime'],
-    ['kike','cayetano'], ['cayetano','seva'], ['zuka','hugolfo'], ['juanru','hugolfo'] ],
-  [ ['kike','seva'], ['jaime','molina'], ['kike','hugolfo'], ['seva','juanru'],
-    ['cayetano','juanru'], ['jaime','hugolfo'], ['zuka','molina'], ['cayetano','zuka'] ],
-  [ ['seva','jaime'], ['juanru','zuka'], ['kike','juanru'], ['seva','zuka'],
-    ['hugolfo','molina'], ['jaime','cayetano'], ['hugolfo','cayetano'], ['kike','molina'] ],
-  [ ['kike','zuka'], ['hugolfo','seva'], ['juanru','jaime'], ['molina','cayetano'],
-    ['seva','molina'], ['cayetano','kike'], ['jaime','zuka'], ['hugolfo','juanru'] ],
-  [ ['molina','zuka'], ['hugolfo','zuka'], ['seva','cayetano'], ['juanru','cayetano'],
-    ['jaime','kike'], ['seva','kike'], ['juanru','molina'], ['hugolfo','jaime'] ],
-  [ ['molina','jaime'], ['cayetano','jaime'], ['zuka','seva'], ['juanru','kike'],
-    ['zuka','cayetano'], ['molina','hugolfo'], ['hugolfo','kike'], ['juanru','seva'] ],
-  [ ['jaime','seva'], ['zuka','juanru'], ['molina','kike'], ['seva','hugolfo'],
-    ['zuka','kike'], ['jaime','juanru'], ['cayetano','molina'], ['cayetano','hugolfo'] ]
+    ['kike','cayetano'], ['cayetano','seva'], ['zuka','hugolfo'], ['juanru','raul'],
+    ['raul','hugolfo'] ],
+  [ ['molina','cayetano'], ['cayetano','hugolfo'], ['hugolfo','jaime'], ['jaime','juanru'],
+    ['juanru','kike'], ['kike','raul'], ['raul','seva'], ['seva','zuka'],
+    ['zuka','molina'] ],
+  [ ['molina','hugolfo'], ['hugolfo','juanru'], ['juanru','cayetano'], ['cayetano','jaime'],
+    ['jaime','seva'], ['seva','kike'], ['kike','zuka'], ['zuka','raul'],
+    ['raul','molina'] ],
+  [ ['molina','jaime'], ['jaime','raul'], ['raul','cayetano'], ['cayetano','zuka'],
+    ['zuka','juanru'], ['juanru','seva'], ['seva','hugolfo'], ['hugolfo','kike'],
+    ['kike','molina'] ],
+  [ ['juanru','molina'], ['seva','molina'], ['jaime','kike'], ['jaime','zuka'],
+    ['cayetano','kike'], ['seva','cayetano'], ['hugolfo','zuka'], ['raul','juanru'],
+    ['hugolfo','raul'] ],
+  [ ['cayetano','molina'], ['hugolfo','cayetano'], ['jaime','hugolfo'], ['juanru','jaime'],
+    ['kike','juanru'], ['raul','kike'], ['seva','raul'], ['zuka','seva'],
+    ['molina','zuka'] ],
+  [ ['hugolfo','molina'], ['juanru','hugolfo'], ['cayetano','juanru'], ['jaime','cayetano'],
+    ['seva','jaime'], ['kike','seva'], ['zuka','kike'], ['raul','zuka'],
+    ['molina','raul'] ],
+  [ ['jaime','molina'], ['raul','jaime'], ['cayetano','raul'], ['zuka','cayetano'],
+    ['juanru','zuka'], ['seva','juanru'], ['hugolfo','seva'], ['kike','hugolfo'],
+    ['molina','kike'] ]
 ];
 
 const WEEK_SUBS = [
-  'Ida · rondas 1 y 2',
-  'Ida · rondas 3 y 4',
-  'Ida · rondas 5 y 6',
-  'Ida ronda 7 · Vuelta ronda 1',
-  'Vuelta · rondas 2 y 3',
-  'Vuelta · rondas 4 y 5',
-  'Vuelta · rondas 6 y 7'
+  'Ida · jornada 1',
+  'Ida · jornada 2',
+  'Ida · jornada 3',
+  'Ida · jornada 4',
+  'Vuelta · jornada 1',
+  'Vuelta · jornada 2',
+  'Vuelta · jornada 3',
+  'Vuelta · jornada 4'
 ];
 
 const KEY = 'ligapadel-2026';
-const TOTAL = 56;
+const WEEKS = 8;
+const PER_WEEK = 9;
+const TOTAL = WEEKS * PER_WEEK;
 
 const SUPABASE_URL = 'https://dmyfzsyalyxtodyfdlai.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_gpbxx_uOSnIkN6g6k0Y3Jg_td8JDqUD';
@@ -537,7 +551,7 @@ function applyRow(row){
   if (!row || !row.id) return;
   if (row.id === 'settings'){
     state.settings = Object.assign(defaultSettings(), row.data || {});
-  } else if (/^w[1-7]-[0-7]$/.test(row.id) && row.data){
+  } else if (/^w[1-8]-[0-8]$/.test(row.id) && row.data){
     state.results[row.id] = row.data;
   }
 }
@@ -635,8 +649,8 @@ function tally(sets){
 function computeStandings(){
   const st = {};
   PAIRS.forEach(p => { st[p.id] = { id:p.id, pj:0, pg:0, pp:0, sg:0, sp:0, jg:0, jp:0, dif:0, pts:0, form:[] }; });
-  for (let w = 1; w <= 7; w++){
-    for (let i = 0; i < 8; i++){
+  for (let w = 1; w <= WEEKS; w++){
+    for (let i = 0; i < PER_WEEK; i++){
       const r = state.results[key(w, i)];
       if (!r) continue;
       const m = FIXTURES[w-1][i];
@@ -669,12 +683,12 @@ function computeStandings(){
 
 function weekStats(w){
   let played = 0;
-  for (let i = 0; i < 8; i++) if (state.results[key(w, i)]) played++;
+  for (let i = 0; i < PER_WEEK; i++) if (state.results[key(w, i)]) played++;
   return played;
 }
 
 function currentWeek(){
-  for (let w = 1; w <= 7; w++) if (weekStats(w) < 8) return w;
+  for (let w = 1; w <= WEEKS; w++) if (weekStats(w) < PER_WEEK) return w;
   return null;
 }
 
@@ -793,7 +807,7 @@ function renderNext(){
   }
   sub.textContent = 'Jornada ' + cw + (state.settings.dates[cw] ? ' · ' + state.settings.dates[cw] : '');
   let html = '';
-  for (let i = 0; i < 8; i++) if (!state.results[key(cw, i)]) html += matchRow(cw, i);
+  for (let i = 0; i < PER_WEEK; i++) if (!state.results[key(cw, i)]) html += matchRow(cw, i);
   box.innerHTML = html || '<p class="next-empty">No quedan partidos pendientes en esta jornada.</p>';
 }
 
@@ -802,18 +816,18 @@ function renderMatches(){
   const cw = currentWeek();
   const box = document.getElementById('weeks');
   let html = '';
-  for (let w = 1; w <= 7; w++){
+  for (let w = 1; w <= WEEKS; w++){
     const played = weekStats(w);
     const open = w === cw;
     const date = state.settings.dates[w];
     let rows = '';
-    for (let i = 0; i < 8; i++) rows += matchRow(w, i);
+    for (let i = 0; i < PER_WEEK; i++) rows += matchRow(w, i);
     html += '<section class="week ' + (open ? 'open' : '') + '">' +
       '<button class="week-head" data-action="toggle-week" aria-expanded="' + open + '">' +
         '<span class="week-num">J' + w + '</span>' +
         '<span class="week-title">Jornada ' + w + '</span>' +
         '<span class="week-sub">' + WEEK_SUBS[w-1] + (date ? ' · ' + esc(date) : '') + '</span>' +
-        '<span class="week-count">' + played + '/8</span>' +
+        '<span class="week-count">' + played + '/' + PER_WEEK + '</span>' +
         '<span class="chev">▾</span>' +
       '</button>' +
       '<div class="week-body"><div class="week-inner">' + rows + '</div></div>' +
@@ -830,7 +844,7 @@ function renderPairs(st){
       '<span class="' + (f === 'V' ? 'win' : 'loss') + '">' + f + '</span>'
     ).join('') || '<span>–</span>';
     let matches = '';
-    for (let w = 1; w <= 7; w++){
+    for (let w = 1; w <= WEEKS; w++){
       FIXTURES[w-1].forEach((m, i) => {
         if (m[0] !== s.id && m[1] !== s.id) return;
         const rivalId = m[0] === s.id ? m[1] : m[0];
@@ -873,7 +887,7 @@ function renderSettingsForm(){
 
   const dates = document.getElementById('dates-grid');
   dates.innerHTML = '';
-  for (let w = 1; w <= 7; w++){
+  for (let w = 1; w <= WEEKS; w++){
     const f = document.createElement('div');
     f.className = 'field';
     const label = document.createElement('label');
